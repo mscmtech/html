@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Student Library Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-icon">📚</span>
+            <div>
+                <h1>Smart Library</h1>
+                <p>Student Library Management System</p>
+            </div>
+        </div>
+        <div class="top-actions">
+            <span id="today"></span>
+            <button class="primary-btn" onclick="openModal('bookModal')">
+                + Add Book
+            </button>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <h3>MAIN MENU</h3>
+            <button class="nav-btn active" data-section="dashboard">🏠 Dashboard</button>
+            <button class="nav-btn" data-section="books">📖 All Books</button>
+            <button class="nav-btn" data-section="students">👨‍🎓 Students</button>
+            <button class="nav-btn" data-section="transactions">🔄 Issue & Return</button>
+            <div class="sidebar-note">
+                <span>💡</span>
+                <p>Manage your library books and student records easily.</p>
+            </div>
+        </aside>
+
+        <main class="content">
+            <section id="dashboard" class="page active">
+                <div class="welcome">
+                    <div>
+                        <p class="eyebrow">LIBRARY OVERVIEW</p>
+                        <h2>Welcome to Smart Library!</h2>
+                        <p>Manage books, students and lending activity in one place.</p>
+                    </div>
+                    <span class="welcome-icon">📚</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-icon purple">📚</span>
+                        <p>Total Book Copies</p>
+                        <h2 id="totalBooks">0</h2>
+                        <small>All copies in the library</small>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon blue">📗</span>
+                        <p>Available Copies</p>
+                        <h2 id="availableBooks">0</h2>
+                        <small>Ready to issue</small>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon orange">📤</span>
+                        <p>Books Issued</p>
+                        <h2 id="issuedBooks">0</h2>
+                        <small>Currently borrowed</small>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon green">👨‍🎓</span>
+                        <p>Registered Students</p>
+                        <h2 id="totalStudents">0</h2>
+                        <small>Student records</small>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Recently Issued Books</h3>
+                            <p>Latest library transactions</p>
+                        </div>
+                        <button class="text-btn" onclick="showSection('transactions')">
+                            View all →
+                        </button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Book</th>
+                                    <th>Student</th>
+                                    <th>Issue Date</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentTransactions"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="books" class="page">
+                <div class="page-heading">
+                    <div>
+                        <h2>Book Collection</h2>
+                        <p>Add and manage your library collection.</p>
+                    </div>
+                    <button class="primary-btn" onclick="openModal('bookModal')">+ Add Book</button>
+                </div>
+                <div class="panel">
+                    <div class="toolbar">
+                        <input id="bookSearch" type="search"
+                            placeholder="🔍 Search by title, author or ISBN...">
+                        <select id="categoryFilter">
+                            <option value="">All categories</option>
+                            <option>Programming</option>
+                            <option>Database</option>
+                            <option>AI & ML</option>
+                            <option>Networking</option>
+                            <option>Science</option>
+                            <option>Literature</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Book Details</th>
+                                    <th>Author</th>
+                                    <th>Category</th>
+                                    <th>Total</th>
+                                    <th>Available</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="booksTable"></tbody>
+                        </table>
+                    </div>
+                    <p class="empty-message" id="booksEmpty" hidden>No books found.</p>
+                </div>
+            </section>
+
+            <section id="students" class="page">
+                <div class="page-heading">
+                    <div>
+                        <h2>Student Records</h2>
+                        <p>Register and manage library members.</p>
+                    </div>
+                    <button class="primary-btn" onclick="openModal('studentModal')">
+                        + Add Student
+                    </button>
+                </div>
+                <div class="panel">
+                    <div class="toolbar">
+                        <input id="studentSearch" type="search"
+                            placeholder="🔍 Search name, ID, email or course...">
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Course</th>
+                                    <th>Year</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTable"></tbody>
+                        </table>
+                    </div>
+                    <p class="empty-message" id="studentsEmpty" hidden>No students found.</p>
+                </div>
+            </section>
+
+            <section id="transactions" class="page">
+                <div class="page-heading">
+                    <div>
+                        <h2>Issue & Return</h2>
+                        <p>Track borrowing activity and due dates.</p>
+                    </div>
+                    <button class="primary-btn" onclick="openModal('issueModal')">
+                        + Issue Book
+                    </button>
+                </div>
+                <div class="panel">
+                    <div class="toolbar">
+                        <input id="transactionSearch" type="search"
+                            placeholder="🔍 Search book or student...">
+                        <select id="transactionFilter">
+                            <option value="">All transactions</option>
+                            <option value="Issued">Issued</option>
+                            <option value="Returned">Returned</option>
+                            <option value="Overdue">Overdue</option>
+                        </select>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Book</th>
+                                    <th>Student</th>
+                                    <th>Issue Date</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTable"></tbody>
+                        </table>
+                    </div>
+                    <p class="empty-message" id="transactionsEmpty" hidden>
+                        No transactions found.
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Book Modal -->
+    <div class="modal" id="bookModal">
+        <div class="modal-card">
+            <div class="modal-heading">
+                <h2>Add New Book</h2>
+                <button class="close-btn" onclick="closeModal('bookModal')">×</button>
+            </div>
+            <form id="bookForm">
+                <label>Book Title<input name="title" required maxlength="100"></label>
+                <label>Author<input name="author" required maxlength="80"></label>
+                <label>ISBN<input name="isbn" required maxlength="30"></label>
+                <label>Category
+                    <select name="category" required>
+                        <option value="">Select category</option>
+                        <option>Programming</option>
+                        <option>Database</option>
+                        <option>AI & ML</option>
+                        <option>Networking</option>
+                        <option>Science</option>
+                        <option>Literature</option>
+                        <option>Other</option>
+                    </select>
+                </label>
+                <label>Number of Copies
+                    <input name="copies" type="number" min="1" max="10000" value="1" required>
+                </label>
+                <button class="primary-btn full-btn" type="submit">Save Book</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div class="modal" id="studentModal">
+        <div class="modal-card">
+            <div class="modal-heading">
+                <h2>Register Student</h2>
+                <button class="close-btn" onclick="closeModal('studentModal')">×</button>
+            </div>
+            <form id="studentForm">
+                <label>Student ID<input name="studentId" required maxlength="30"></label>
+                <label>Full Name<input name="name" required maxlength="80"></label>
+                <label>Email<input name="email" type="email" required maxlength="100"></label>
+                <label>Course<input name="course" required maxlength="60" placeholder="e.g. B.Tech AIML"></label>
+                <label>Year of Study
+                    <select name="year" required>
+                        <option value="">Select year</option>
+                        <option>1st Year</option>
+                        <option>2nd Year</option>
+                        <option>3rd Year</option>
+                        <option>4th Year</option>
+                    </select>
+                </label>
+                <button class="primary-btn full-btn" type="submit">Register Student</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Issue Book Modal -->
+    <div class="modal" id="issueModal">
+        <div class="modal-card">
+            <div class="modal-heading">
+                <h2>Issue a Book</h2>
+                <button class="close-btn" onclick="closeModal('issueModal')">×</button>
+            </div>
+            <form id="issueForm">
+                <label>Select Book
+                    <select name="bookId" id="issueBookSelect" required></select>
+                </label>
+                <label>Select Student
+                    <select name="studentId" id="issueStudentSelect" required></select>
+                </label>
+                <label>Issue Date<input type="date" name="issueDate" id="issueDate" required></label>
+                <label>Due Date<input type="date" name="dueDate" id="dueDate" required></label>
+                <button class="primary-btn full-btn" type="submit">Confirm Issue</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <footer>
+        <p>Smart Student Library Management System · HTML, CSS & JavaScript</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
